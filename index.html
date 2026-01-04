@@ -1,48 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Green Network - Protect Earth</title>
+    <title>Cosmos Vanguard - 星际先锋</title>
+    <!-- 引入科幻字体和图标库 -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        :root {
+            --bg-color: #050510;
+            --card-bg: rgba(20, 20, 35, 0.6);
+            --primary: #00f3ff; /* 赛博青 */
+            --secondary: #bc13fe; /* 霓虹紫 */
+            --text-main: #ffffff;
+            --text-dim: #a0a0b0;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        :root {
-            --primary: #2e7d32;
-            --secondary: #4caf50;
-            --accent: #8bc34a;
-            --light: #e8f5e9;
-            --dark: #1b5e20;
-            --text: #333333;
-            --white: #ffffff;
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--light);
-            color: var(--text);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Exo 2', sans-serif;
+            overflow-x: hidden;
             line-height: 1.6;
         }
 
-        header {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: var(--white);
-            padding: 1rem 0;
-            position: sticky;
+        /* 动态星空画布 */
+        #starfield {
+            position: fixed;
             top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
+
+        /* 通用样式类 */
+        h1, h2, h3, .nav-logo {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .container {
             width: 90%;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .neon-text {
+            color: var(--text-main);
+            text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+        }
+
+        .neon-border {
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            border: 1px solid var(--primary);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 35px;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover {
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            text-shadow: 0 0 8px var(--primary);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary {
+            color: var(--secondary);
+            border-color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(188, 19, 254, 0.1);
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.4);
+            text-shadow: 0 0 8px var(--secondary);
+        }
+
+        /* 导航栏 */
+        header {
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 5, 16, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .nav-container {
@@ -51,672 +135,650 @@
             align-items: center;
         }
 
-        .logo {
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-main);
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 1.8rem;
-            font-weight: 700;
         }
-
-        .logo i {
-            font-size: 2rem;
+        
+        .nav-logo i {
+            color: var(--primary);
         }
 
         nav ul {
             display: flex;
             list-style: none;
+            gap: 30px;
         }
 
-        nav ul li {
-            margin-left: 2rem;
-        }
-
-        nav ul li a {
-            color: var(--white);
+        nav a {
+            color: var(--text-dim);
             text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            transition: color 0.3s;
             position: relative;
         }
 
-        nav ul li a:hover {
-            color: var(--accent);
+        nav a:hover {
+            color: var(--primary);
         }
-
-        nav ul li a::after {
+        
+        nav a::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
             width: 0;
             height: 2px;
-            background-color: var(--accent);
-            transition: width 0.3s ease;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s;
         }
-
-        nav ul li a:hover::after {
+        
+        nav a:hover::after {
             width: 100%;
         }
 
+        /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80');
-            background-size: cover;
-            background-position: center;
-            height: 80vh;
+            height: 100vh;
             display: flex;
             align-items: center;
-            text-align: center;
-            color: var(--white);
+            justify-content: flex-start;
+            padding-top: 80px;
+            position: relative;
         }
 
         .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 650px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            background: rgba(188, 19, 254, 0.1);
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #b4b4b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero h1 span {
+            color: var(--primary);
+            -webkit-text-fill-color: var(--primary);
         }
 
         .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+            max-width: 500px;
         }
 
-        .btn {
-            display: inline-block;
-            background-color: var(--accent);
-            color: var(--white);
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
         }
 
-        .btn:hover {
-            background-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        /* Grid Section (Missions) */
+        .section {
+            padding: 100px 0;
         }
 
-        section {
-            padding: 5rem 0;
-        }
-
-        .section-title {
+        .section-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 60px;
         }
 
-        .section-title h2 {
+        .section-header h2 {
             font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            position: relative;
-            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .line-accent {
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+            margin: 0 auto;
+            box-shadow: 0 0 10px var(--primary);
         }
 
-        .section-title h2::after {
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: var(--glass-border);
+            padding: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+        
+        .card::before {
             content: '';
             position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background-color: var(--accent);
-            border-radius: 2px;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 0;
+            background: var(--primary);
+            transition: height 0.5s;
+        }
+        
+        .card:hover::before {
+            height: 100%;
         }
 
-        .section-title p {
-            color: var(--text);
-            max-width: 700px;
-            margin: 0 auto;
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .card h3 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
         }
 
-        .about-content {
+        /* Fleet Showcase */
+        .fleet-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 3rem;
+            gap: 50px;
             align-items: center;
         }
 
-        .about-img {
-            border-radius: 10px;
+        .fleet-img {
+            position: relative;
+            border-radius: 5px;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .about-img img {
+        .fleet-img img {
             width: 100%;
-            height: auto;
             display: block;
-            transition: transform 0.5s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            filter: brightness(0.8) contrast(1.2);
+            transition: filter 0.5s;
         }
-
-        .about-img:hover img {
-            transform: scale(1.05);
+        
+        .fleet-img:hover img {
+            filter: brightness(1) contrast(1);
         }
-
-        .about-text h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: var(--dark);
-        }
-
-        .about-text p {
-            margin-bottom: 1.5rem;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 2rem 1rem;
-            background-color: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-10px);
-        }
-
-        .stat-item i {
-            font-size: 2.5rem;
+        
+        /* Holographic Overlay Effect */
+        .hud-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: 1px solid var(--primary);
+            padding: 5px 10px;
+            font-family: 'Orbitron';
+            font-size: 0.7rem;
             color: var(--primary);
-            margin-bottom: 1rem;
+            background: rgba(0,0,0,0.5);
         }
 
-        .stat-item h3 {
-            font-size: 2.5rem;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-item p {
-            color: var(--text);
-        }
-
-        .initiatives {
-            background-color: var(--white);
-        }
-
-        .initiatives-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .initiative-card {
-            background-color: var(--light);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .initiative-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .initiative-img {
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .initiative-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .initiative-card:hover .initiative-img img {
-            transform: scale(1.1);
-        }
-
-        .initiative-content {
-            padding: 1.5rem;
-        }
-
-        .initiative-content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-
-        .initiative-content p {
-            margin-bottom: 1.5rem;
-        }
-
-        .cta {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: var(--white);
-            text-align: center;
-            padding: 5rem 0;
-        }
-
-        .cta h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .cta p {
+        .fleet-text h3 {
+            color: var(--secondary);
+            margin-bottom: 10px;
             font-size: 1.2rem;
-            margin-bottom: 2rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
         }
-
-        .cta .btn {
-            background-color: var(--white);
+        
+        .fleet-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .stat-row {
+            display: flex;
+            gap: 40px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+        }
+        
+        .stat h4 {
+            font-size: 2rem;
             color: var(--primary);
+            font-family: 'Orbitron';
+        }
+        
+        .stat span {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
         }
 
-        .cta .btn:hover {
-            background-color: var(--accent);
-            color: var(--white);
+        /* Data Section */
+        .data-strip {
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.05), transparent);
+            padding: 40px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin: 50px 0;
+        }
+        
+        .data-grid {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+        
+        .data-item {
+            margin: 10px;
+        }
+        
+        .data-item i {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .data-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Orbitron';
+            display: block;
+        }
+        
+        .data-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
         }
 
+        /* Footer */
         footer {
-            background-color: var(--dark);
-            color: var(--white);
-            padding: 3rem 0 1rem;
+            background: #020205;
+            padding: 60px 0 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 50px;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
         }
 
-        .footer-column h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 10px;
+        .footer-brand h2 {
+            color: var(--text-main);
+            margin-bottom: 15px;
         }
 
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background-color: var(--accent);
+        .footer-brand p {
+            color: var(--text-dim);
+            max-width: 300px;
+            font-size: 0.9rem;
         }
 
-        .footer-column p {
-            margin-bottom: 1rem;
+        .footer-links h4 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.1rem;
         }
 
-        .footer-links {
+        .footer-links ul {
             list-style: none;
         }
 
         .footer-links li {
-            margin-bottom: 0.8rem;
+            margin-bottom: 10px;
         }
 
-        .footer-links li a {
-            color: var(--light);
+        .footer-links a {
+            color: var(--text-dim);
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: color 0.3s;
         }
 
-        .footer-links li a:hover {
-            color: var(--accent);
+        .footer-links a:hover {
+            color: var(--primary);
             padding-left: 5px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: var(--white);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background-color: var(--accent);
-            transform: translateY(-5px);
         }
 
         .copyright {
             text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.8rem;
+            color: #555;
         }
 
-        .mobile-menu {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        @media (max-width: 992px) {
-            .about-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .initiatives-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
             }
             
-            .hero p {
-                font-size: 1.1rem;
+            .nav-container nav {
+                display: none; /* 简化：移动端隐藏导航 */
             }
             
-            nav ul {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background-color: var(--primary);
-                flex-direction: column;
-                padding: 1rem 0;
-                text-align: center;
-                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-            }
-            
-            nav ul.active {
-                display: flex;
-            }
-            
-            nav ul li {
-                margin: 0;
-                padding: 0.8rem 0;
-            }
-            
-            .mobile-menu {
-                display: block;
-            }
-            
-            .initiatives-grid {
+            .fleet-container {
                 grid-template-columns: 1fr;
             }
             
             .footer-content {
                 grid-template-columns: 1fr;
             }
-            
-            .stats {
-                grid-template-columns: 1fr;
-            }
         }
-
-        /* Animation for stats counter */
-        .counter {
-            transition: all 0.5s ease;
+        
+        /* Glitch Animation */
+        .glitch {
+            position: relative;
+        }
+        
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 #00fff9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(30px, 9999px, 10px, 0); }
+            5% { clip: rect(80px, 9999px, 90px, 0); }
+            10% { clip: rect(40px, 9999px, 50px, 0); }
+            100% { clip: rect(10px, 9999px, 90px, 0); }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { clip: rect(60px, 9999px, 80px, 0); }
+            5% { clip: rect(10px, 9999px, 30px, 0); }
+            10% { clip: rect(90px, 9999px, 10px, 0); }
+            100% { clip: rect(20px, 9999px, 60px, 0); }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <canvas id="starfield"></canvas>
+
     <header>
         <div class="container nav-container">
-            <div class="logo">
-                <i class="fas fa-seedling"></i>
-                <span>Green Network</span>
+            <div class="nav-logo">
+                <i class="fas fa-atom fa-spin" style="--fa-animation-duration: 3s;"></i>
+                <span>COSMOS<span style="color:var(--primary)">VANGUARD</span></span>
             </div>
             <nav>
-                <div class="mobile-menu">
-                    <i class="fas fa-bars"></i>
-                </div>
                 <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#initiatives">Initiatives</a></li>
-                    <li><a href="#get-involved">Get Involved</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#mission">MISSION</a></li>
+                    <li><a href="#fleet">FLEET</a></li>
+                    <li><a href="#research">RESEARCH</a></li>
+                    <li><a href="#join">ENLIST</a></li>
                 </ul>
             </nav>
+            <a href="#join" class="btn" style="padding: 8px 20px; font-size: 0.8rem;">LOGIN</a>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container hero-content">
-            <h1>Protect Our Planet, Preserve Our Future</h1>
-            <p>Join the global movement to create a sustainable world through conservation, education, and community action.</p>
-            <a href="#get-involved" class="btn">Join Our Network</a>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about">
+    <section class="hero">
         <div class="container">
-            <div class="section-title">
-                <h2>About Green Network</h2>
-                <p>We are a global community dedicated to environmental protection and sustainable development.</p>
-            </div>
-            <div class="about-content">
-                <div class="about-img">
-                    <img src="https://images.unsplash.com/photo-1507591064344-4c6ce005b128?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Team planting trees">
-                </div>
-                <div class="about-text">
-                    <h3>Our Mission</h3>
-                    <p>Green Network is committed to creating a sustainable future by protecting natural ecosystems, promoting renewable energy, and empowering communities to take environmental action.</p>
-                    <p>Founded in 2010, we've grown from a small grassroots organization to an international network with over 50,000 members across 120 countries.</p>
-                    <p>Our approach combines scientific research, community engagement, and policy advocacy to address the most pressing environmental challenges of our time.</p>
-                    <a href="#" class="btn">Learn More</a>
-                </div>
-            </div>
-            <div class="stats">
-                <div class="stat-item">
-                    <i class="fas fa-tree"></i>
-                    <h3 class="counter" data-target="2500000">0</h3>
-                    <p>Trees Planted</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-users"></i>
-                    <h3 class="counter" data-target="50000">0</h3>
-                    <p>Active Members</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-globe-americas"></i>
-                    <h3 class="counter" data-target="120">0</h3>
-                    <p>Countries Reached</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-recycle"></i>
-                    <h3 class="counter" data-target="1500">0</h3>
-                    <p>Cleanup Projects</p>
+            <div class="hero-content">
+                <span class="hero-badge">SYSTEM: ONLINE // YEAR: 3042</span>
+                <h1 class="glitch" data-text="BEYOND THE HORIZON">BEYOND THE <br><span>HORIZON</span></h1>
+                <p>Humanity has outgrown its cradle. Join the elite Vanguard fleet as we chart the unknown sectors of the Andromeda galaxy. The future is not written—it is discovered.</p>
+                <div class="hero-buttons">
+                    <a href="#mission" class="btn">INITIATE LAUNCH</a>
+                    <a href="#fleet" class="btn btn-secondary">VIEW SHIPS</a>
                 </div>
             </div>
         </div>
     </section>
+    
+    <div class="data-strip">
+        <div class="container data-grid">
+            <div class="data-item">
+                <i class="fas fa-globe"></i>
+                <span class="data-value">42</span>
+                <span class="data-label">COLONIES</span>
+            </div>
+            <div class="data-item">
+                <i class="fas fa-rocket"></i>
+                <span class="data-value">1,024</span>
+                <span class="data-label">ACTIVE SHIPS</span>
+            </div>
+            <div class="data-item">
+                <i class="fas fa-user-astronaut"></i>
+                <span class="data-value">8.5M</span>
+                <span class="data-label">POPULATION</span>
+            </div>
+            <div class="data-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span class="data-value">3.4c</span>
+                <span class="data-label">MAX WARP</span>
+            </div>
+        </div>
+    </div>
 
-    <!-- Initiatives Section -->
-    <section class="initiatives" id="initiatives">
+    <section id="mission" class="section">
         <div class="container">
-            <div class="section-title">
-                <h2>Our Initiatives</h2>
-                <p>Discover the key programs and projects we're implementing to protect our planet.</p>
+            <div class="section-header">
+                <h2>Our Directives</h2>
+                <div class="line-accent"></div>
             </div>
-            <div class="initiatives-grid">
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://dialogue.earth/content/uploads/2021/04/lessons-from-the-rush-to-reforest-china-dialogue-2400x1599.jpg" alt="Reforestation">
-                    </div>
-                    <div class="initiative-content">
-                        <h3>Global Reforestation</h3>
-                        <p>Planting millions of trees worldwide to restore ecosystems, combat climate change, and protect biodiversity.</p>
-                        <a href="#" class="btn">Learn More</a>
-                    </div>
+            <div class="grid-3">
+                <div class="card">
+                    <i class="fas fa-route card-icon"></i>
+                    <h3>Deep Space Navigation</h3>
+                    <p>Mapping the safe hyperlanes through the Kuiper Expanse using AI-assisted quantum cartography.</p>
                 </div>
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://images.unsplash.com/photo-1621451537084-482c73073a0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Ocean Conservation">
-                    </div>
-                    <div class="initiative-content">
-                        <h3>Ocean Conservation</h3>
-                        <p>Protecting marine ecosystems, reducing plastic pollution, and promoting sustainable fishing practices.</p>
-                        <a href="#" class="btn">Learn More</a>
-                    </div>
+                <div class="card">
+                    <i class="fas fa-dna card-icon" style="color: var(--secondary);"></i>
+                    <h3>Xenobiology</h3>
+                    <p>Studying alien flora and fauna to adapt human genetics for survival on hostile high-gravity worlds.</p>
                 </div>
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80" alt="Renewable Energy">
-                    </div>
-                    <div class="initiative-content">
-                        <h3>Renewable Energy</h3>
-                        <p>Promoting solar, wind, and other clean energy sources to reduce dependence on fossil fuels.</p>
-                        <a href="#" class="btn">Learn More</a>
-                    </div>
+                <div class="card">
+                    <i class="fas fa-shield-alt card-icon"></i>
+                    <h3>Planetary Defense</h3>
+                    <p>Ensuring the safety of our colonies against asteroid impacts and unknown cosmic threats.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta" id="get-involved">
+    <section id="fleet" class="section" style="background: rgba(255,255,255,0.02);">
         <div class="container">
-            <h2>Join Our Global Movement</h2>
-            <p>Together, we can create a sustainable future for generations to come. Every action counts, no matter how small.</p>
-            <a href="#" class="btn">Become a Member</a>
+            <div class="fleet-container">
+                <div class="fleet-img">
+                    <div class="hud-overlay">CLASS: DREADNOUGHT</div>
+                    <img src="https://images.unsplash.com/photo-1541185933-710f500331da?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Futuristic Spaceship">
+                </div>
+                <div class="fleet-text">
+                    <h3>FLAGSHIP MODEL</h3>
+                    <h2 class="neon-text">The Aeon Walker</h2>
+                    <p>Powered by a singularity core, the Aeon Walker is capable of sustained warp travel for up to 50 years without refueling. Equipped with top-tier terraforming labs and cryo-stasis for 5,000 crew members.</p>
+                    
+                    <div class="stat-row">
+                        <div class="stat">
+                            <h4>500m</h4>
+                            <span>Length</span>
+                        </div>
+                        <div class="stat">
+                            <h4>MK-IV</h4>
+                            <span>Engine</span>
+                        </div>
+                        <div class="stat">
+                            <h4>98%</h4>
+                            <span>Shields</span>
+                        </div>
+                    </div>
+                    <br>
+                    <a href="#" class="btn btn-secondary">Inspect Blueprint</a>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer id="contact">
+    <section id="join" class="section">
+        <div class="container" style="text-align: center; max-width: 700px;">
+            <i class="fas fa-fingerprint" style="font-size: 4rem; color: var(--primary); margin-bottom: 20px; opacity: 0.7;"></i>
+            <h2 style="font-size: 3rem; margin-bottom: 20px;">Identity Verification Required</h2>
+            <p style="margin-bottom: 40px;">To access the Vanguard recruitment network, please authorize your biometric data. Join the ranks of the brave.</p>
+            <form style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                <input type="email" placeholder="Enter Comms ID (Email)" style="padding: 12px 20px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-dim); color: white; border-radius: 0; outline: none; width: 60%;">
+                <button class="btn">AUTHORIZE</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Green Network</h3>
-                    <p>We are dedicated to protecting our planet through collaborative action, education, and sustainable solutions.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
+                <div class="footer-brand">
+                    <h2>COSMOS VANGUARD</h2>
+                    <p>Exploring the void between stars. Humanity's sword and shield in the darkness of space.</p>
                 </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#initiatives">Initiatives</a></li>
-                        <li><a href="#get-involved">Get Involved</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                <div class="footer-links">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="#">Star Map</a></li>
+                        <li><a href="#">Fleet Admiral</a></li>
+                        <li><a href="#">Protocols</a></li>
                     </ul>
                 </div>
-                <div class="footer-column">
-                    <h3>Our Programs</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Reforestation</a></li>
-                        <li><a href="#">Ocean Cleanup</a></li>
-                        <li><a href="#">Wildlife Protection</a></li>
-                        <li><a href="#">Climate Education</a></li>
-                        <li><a href="#">Sustainable Agriculture</a></li>
+                <div class="footer-links">
+                    <h4>Frequency</h4>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-discord"></i> Subspace</a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i> Transmission</a></li>
+                        <li><a href="#"><i class="fab fa-github"></i> Source Code</a></li>
                     </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Contact Us</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> Copper Creek Drive, New York</p>
-                    <p><i class="fas fa-phone"></i> +1 (312) 171-0771</p>
-                    <p><i class="fas fa-envelope"></i> support@greennetwork.org</p>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2025 Green Network. All rights reserved.</p>
+                &copy; 3042 Cosmos Vanguard Initiative. All planetary rights reserved.
             </div>
         </div>
     </footer>
 
     <script>
-        // Mobile Menu Toggle
-        document.querySelector('.mobile-menu').addEventListener('click', function() {
-            document.querySelector('nav ul').classList.toggle('active');
-        });
+        // Starfield Animation
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
 
-        // Counter Animation
-        function animateCounters() {
-            const counters = document.querySelectorAll('.counter');
-            const speed = 200; // The lower the slower
+        let width, height;
+        let stars = [];
+
+        function init() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+
+            stars = [];
+            const numStars = width > 768 ? 200 : 80; // Fewer stars on mobile
             
-            counters.forEach(counter => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText;
-                
-                const inc = target / speed;
-                
-                if(count < target) {
-                    counter.innerText = Math.ceil(count + inc);
-                    setTimeout(animateCounters, 1);
-                } else {
-                    counter.innerText = target;
-                }
-            });
+            for (let i = 0; i < numStars; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 2,
+                    speed: Math.random() * 0.5 + 0.1,
+                    opacity: Math.random()
+                });
+            }
         }
 
-        // Initialize counters when page loads
-        window.addEventListener('load', animateCounters);
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw stars
+            stars.forEach(star => {
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
+                // Move stars slowly upward/right
+                star.y -= star.speed;
                 
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
+                // Reset if out of bounds
+                if (star.y < 0) {
+                    star.y = height;
+                    star.x = Math.random() * width;
+                }
                 
-                const targetElement = document.querySelector(targetId);
-                if(targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                    
-                    document.querySelector('nav ul').classList.remove('active');
+                // Twinkle effect
+                star.opacity += (Math.random() - 0.5) * 0.05;
+                if(star.opacity < 0.1) star.opacity = 0.1;
+                if(star.opacity > 1) star.opacity = 1;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', init);
+        
+        // Start animation
+        init();
+        animate();
+
+        // Reveal on Scroll effect
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
                 }
             });
+        }, observerOptions);
+
+        document.querySelectorAll('.card, .fleet-text, .section-header').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.8s ease-out';
+            observer.observe(el);
         });
     </script>
 </body>
-
 </html>
